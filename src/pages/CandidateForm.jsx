@@ -10,7 +10,7 @@ const CandidateForm = () => {
         // Fetch candidate details from the server
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://election-server.onrender.com/candidates');
+                const response = await axios.get('http://localhost:3002/candidates');
                 setCandidates(response.data);
                 setLoading(false);
             } catch (error) {
@@ -35,26 +35,31 @@ const CandidateForm = () => {
         return groupedCandidates;
     };
 
-    // Render candidate details in table format
     const renderCandidates = () => {
         const groupedCandidates = groupCandidatesByPost(candidates);
         return Object.entries(groupedCandidates).map(([post, candidates]) => (
             <div key={post} className="mb-8">
                 <h2 className="text-xl font-bold mb-4">{post}</h2>
-                <table className="table-auto">
+                <table className="table-auto w-full">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>State</th>
+                            <th className="px-4 py-2">Ballot Box</th>
+                            <th className="px-4 py-2">Name</th>
+                            <th className="px-4 py-2">School</th>
+                            <th className="px-4 py-2">Image</th> {/* Add table header for image */}
                         </tr>
                     </thead>
                     <tbody>
                         {candidates.map((candidate) => (
                             <tr key={candidate.id}>
-                                <td>{candidate.id}</td>
-                                <td>{candidate.name}</td>
-                                <td>{candidate.state}</td>
+                                <td className="border px-4 py-2">{candidate.id}</td>
+                                <td className="border px-4 py-2">{candidate.name}</td>
+                                <td className="border px-4 py-2">{candidate.state}</td>
+                                <td className="border px-4 py-2">
+                                    {candidate.image && ( // Check if candidate has an image
+                                        <img src={`http://localhost:3002/${candidate.image}`} alt={candidate.name} className="w-24 h-24 object-cover rounded-full" /> // Render the candidate image
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

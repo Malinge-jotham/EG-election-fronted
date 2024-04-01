@@ -1,7 +1,6 @@
-import { Buffer } from 'buffer'; // Import Buffer
 
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 
@@ -17,6 +16,8 @@ import Results from "./pages/Results.jsx";
 import CandidateForm from "./pages/CandidateForm.jsx";
 import Reports from "./pages/Reports.jsx";
 import CandidatesReports from './pages/CandidatesReports.jsx';
+import AdminApprovalPage from "./pages/AdminApprovalPage.jsx";
+import CandidateApplicationForm from "./pages/CandidateApplicationForm.jsx";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
       {
         path: "/Reports",
         element: <Reports />,
+      },
+      {
+        path: "/Approve",
+        element: <AdminApprovalPage />,
+      },
+      {
+        path: "/Apply",
+        element: <CandidateApplicationForm />,
       },
       {
         path: "/Tally",

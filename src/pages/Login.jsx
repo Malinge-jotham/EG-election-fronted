@@ -1,50 +1,80 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../Auth';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const navigate = useNavigate();
+  const { login, message, showPopup, setShowPopup } = useAuth(); // Use the login function from useAuth hook
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  // Handle login
+  const handleLogin = async () => {
     try {
-      const response = await axios.post('https://election-server.onrender.com/login', { username, password });
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      setError('');
-      setLoading(false);
-      onLogin();
-      // Redirect to the home route after successful login
-      window.location.href = '/';
+      await login(username, password);
+      // Display success notification
+      setNotification(message);
+      // Reset username and password fields
+      setUsername('');
+      setPassword('');
+      // Redirect to the home page
+      navigate('/');
     } catch (error) {
-      console.error('Error logging in:', error.response.data);
-      setError(error.response.data);
-      setLoading(false);
+      // Display error notification
+      setNotification(message);
     }
+    // Show the notification pop-up
+    setShowPopup(true);
   };
 
   return (
-    <div className="container mx-auto max-w-md mt-8">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <input type="text" className="w-full border border-gray-300 rounded px-3 py-2" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
+      <h2 className="text-2xl font-semibold mb-6">Login</h2>
+      <form className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Username:</label>
+          <input
+            type="text"
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
-        <div className="mb-4">
-          <input type="password" className="w-full border border-gray-300 rounded px-3 py-2" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Password:</label>
+          <input
+            type="password"
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white rounded px-4 py-2">
-          {loading ? 'Logging in...' : 'Login'}
+        <button
+          type="button"
+          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          onClick={handleLogin}
+        >
+          Login
         </button>
       </form>
-      <p className="text-center mt-4">
-        Don't have an account? <Link to="/register" className="text-blue-500 hover:underline">Register here</Link>
-      </p>
+      {/* Notification pop-up */}
+      {showPopup && (
+        <div className="absolute inset-x-0 bottom-0 mb-4 flex justify-center">
+          <div className="bg-white border border-gray-300 p-4 rounded-md shadow-md">
+            <p className="text-gray-700">{notification}</p>
+            <button
+              className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              onClick={() => setShowPopup(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="mt-4">
+        Don't have an account? <Link to="/registerpage">Register</Link>
+      </div>
     </div>
   );
 };

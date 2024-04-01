@@ -8,14 +8,14 @@ import "./App.css";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-//mport Navbar from "./components/Navbar";
-//import Footer from "./components/Footer";
-//import AttractiveFeatureComponent from "./components/AttractiveFeatureComponent";
-//import Banner from "./components/Banner";
+import { AuthProvider } from './contexts/AuthProvider';
+
 
 
 function App() {
   return (
+    <AuthProvider>
+
     <React.Fragment>
       <div>
         <Navbar />
@@ -23,6 +23,7 @@ function App() {
       <Outlet />
     <Footer />
     </React.Fragment>
+    </AuthProvider>
   );
 }
 
