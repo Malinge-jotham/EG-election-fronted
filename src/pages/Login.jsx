@@ -73,7 +73,7 @@ const Login = () => {
         </div>
       )}
       <div className="mt-4">
-        Don't have an account? <Link to="/registerpage">Register</Link>
+        Don't have an account? <Link to="/Register">Register</Link>
       </div>
     </div>
   );
